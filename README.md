@@ -2,77 +2,62 @@
 
 **Requests** is a simple, yet elegant, HTTP library.
 
-```python
->>> import requests
->>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))
->>> r.status_code
-200
->>> r.headers['content-type']
-'application/json; charset=utf8'
->>> r.encoding
-'utf-8'
->>> r.text
-'{"authenticated": true, ...'
->>> r.json()
-{'authenticated': True, ...}
-```
+## 项目的背景和目标主要包括以下几点：
 
-Requests allows you to send HTTP/1.1 requests extremely easily. There’s no need to manually add query strings to your URLs, or to form-encode your `PUT` & `POST` data — but nowadays, just use the `json` method!
+`requests`是一个流行的Python第三方库，用于发送HTTP请求。它提供了一种简洁且友好的方式来处理HTTP通信，使得在Python中进行网络请求变得非常容易。
 
-Requests is one of the most downloaded Python packages today, pulling in around `30M downloads / week`— according to GitHub, Requests is currently [depended upon](https://github.com/psf/requests/network/dependents?package_id=UGFja2FnZS01NzA4OTExNg%3D%3D) by `1,000,000+` repositories. You may certainly put your trust in this code.
+项目的背景和目标主要包括以下几点：
 
-[![Downloads](https://pepy.tech/badge/requests/month)](https://pepy.tech/project/requests)
-[![Supported Versions](https://img.shields.io/pypi/pyversions/requests.svg)](https://pypi.org/project/requests)
-[![Contributors](https://img.shields.io/github/contributors/psf/requests.svg)](https://github.com/psf/requests/graphs/contributors)
+1. **简化HTTP请求**：`requests`的目标之一是提供一个简单且易于使用的接口，使开发人员能够轻松地发送HTTP请求，并处理与Web服务器之间的通信。
 
-## Installing Requests and Supported Versions
+2. **替代标准库的`urllib`模块**：Python标准库提供了`urllib`模块来处理HTTP请求，但其API相对较复杂。`requests`库的目标之一是提供更简洁、直观的API，以替代`urllib`模块的使用。
 
-Requests is available on PyPI:
+3. **功能丰富**：`requests`库提供了许多功能强大的特性，如支持HTTP和HTTPS协议、Cookie管理、会话管理、文件上传、代理支持、身份验证等。这些功能使得处理各种常见的HTTP任务变得更加方便和灵活。
 
-```console
-$ python -m pip install requests
-```
+4. **社区支持和活跃性**：`requests`是一个非常受欢迎的开源项目，拥有庞大的开发者社区。这个项目得到了广泛的关注和支持，定期更新和维护，使其保持与最新的Web技术和标准的兼容性。
 
-Requests officially supports Python 3.7+.
+总的来说，`requests`旨在提供一个简单、直观且功能丰富的接口，以便在Python中处理HTTP请求。它使得与Web服务器进行通信变得更加简单和方便，受到了广大开发者的青睐和使用。
 
-## Supported Features & Best–Practices
+## requests项目技术栈
 
-Requests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.
+本质是为了简化http请求的过程，方便开发人员。python是由C语言编写，在C语言中实现http请求用的又是tcp或udp协议，tcp通信需要使用socket编程，C语言被编译器转换成汇编语言，之后转换成二进制文件，来控制芯片电路的通断。可见，requests的诞生不是为了别的，是为了程序员自己。
 
-- Keep-Alive & Connection Pooling
-- International Domains and URLs
-- Sessions with Cookie Persistence
-- Browser-style TLS/SSL Verification
-- Basic & Digest Authentication
-- Familiar `dict`–like Cookies
-- Automatic Content Decompression and Decoding
-- Multi-part File Uploads
-- SOCKS Proxy Support
-- Connection Timeouts
-- Streaming Downloads
-- Automatic honoring of `.netrc`
-- Chunked HTTP Requests
+## 代码组织方式
 
-## API Reference and User Guide available on [Read the Docs](https://requests.readthedocs.io)
+Python的requests项目采用了相对简单而清晰的代码组织方式。以下是requests项目的整体结构和代码组织方式的概述：
 
-[![Read the Docs](https://raw.githubusercontent.com/psf/requests/main/ext/ss.png)](https://requests.readthedocs.io)
+1. **根目录**：requests项目的根目录包含一些项目级别的文件和目录，包括README.md（项目说明文档）、LICENSE（许可证文件）和setup.py（用于安装的脚本）等。
 
-## Cloning the repository
+2. **requests目录**：主要的代码和功能都位于`requests`目录中。该目录下的文件和子目录组织如下：
 
-When cloning the Requests repository, you may need to add the `-c
-fetch.fsck.badTimezone=ignore` flag to avoid an error about a bad commit (see
-[this issue](https://github.com/psf/requests/issues/2690) for more background):
+   - `__init__.py`：这个文件是`requests`包的入口文件，定义了该包的公共接口和导入逻辑。
 
-```shell
-git clone -c fetch.fsck.badTimezone=ignore https://github.com/psf/requests.git
-```
+   - `adapters`目录：包含用于处理不同底层HTTP库的适配器的代码。每个适配器对应一种HTTP库，如`HTTPAdapter`用于处理标准的HTTP请求，`HTTPAdapter`用于处理基于urllib3库的HTTP请求。
 
-You can also apply this setting to your global Git config:
+   - `api.py`：提供了顶层API接口的实现，定义了向外部暴露的高级请求方法，如`get()`、`post()`等。
 
-```shell
-git config --global fetch.fsck.badTimezone ignore
-```
+   - `certs.py`：包含处理SSL证书的代码，用于加载和验证SSL证书。
 
----
+   - `compat`目录：提供了与不同Python版本兼容性相关的代码。其中包含了一些兼容性函数和常量定义，用于处理不同版本之间的差异。
 
-[![Kenneth Reitz](https://raw.githubusercontent.com/psf/requests/main/ext/kr.png)](https://kennethreitz.org) [![Python Software Foundation](https://raw.githubusercontent.com/psf/requests/main/ext/psf.png)](https://www.python.org/psf)
+   - `exceptions.py`：定义了requests库中的异常类，用于处理各种HTTP请求相关的异常情况。
+
+   - `models.py`：包含了请求和响应的模型类的定义，如`Request`和`Response`。
+
+   - `sessions.py`：实现了`Session`类，用于管理HTTP会话和保持持久的连接。
+
+   - `status_codes.py`：定义了HTTP状态码的常量，用于表示不同的请求状态。
+
+   - `utils.py`：提供了一些实用函数和工具方法，用于处理请求和响应数据的转换和解析。
+
+3. **tests目录**：包含了用于测试requests库的单元测试代码。这些测试用例涵盖了不同的功能和边界情况，以确保库的正确性和稳定性。
+
+4. **其他文件**：除了上述主要的目录和文件外，requests项目还包含了一些其他的文件，如`.travis.yml`（用于持续集成的配置文件）和`.coveragerc`（用于代码覆盖率测试的配置文件）等。
+
+总体而言，requests项目的代码组织方式遵循了常见的Python项目结构，将不同的功能模块分散到了各个文件和子目录中，并使用适当的命名和模块划分来提高代码的可读性和可维护性。这样的组织方式使得项目的各个部分能
+
+够相对独立地进行开发、测试和扩展，同时也方便了开发者理解和使用该库的功能。
+
+
+
+
