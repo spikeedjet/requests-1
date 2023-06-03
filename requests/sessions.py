@@ -373,6 +373,53 @@ class Session(SessionRedirectMixin):
       <Response [200]>
     """
 
+
+
+
+"""类级别的属性是指与类相关联而不是与实例相关联的属性。它们在整个类的所有实例之间是共享的，可以被类的所有方法访问和修改。类级别的属性在类的定义中声明，并且可以通过类名直接访问，而不需要实例化对象。
+
+在Python中，以两个下划线开头和结尾的属性名被称为双下划线命名（dunder）或者魔术方法。这样的命名约定是为了避免与用户定义的属性名冲突，并且表明这些属性具有特殊的含义或用途。
+
+在上述代码中，`__attrs__`被定义为一个类级别的属性，它存储了一组字符串，表示了`Session`类的一些属性的名称。这个属性的命名以双下划线开头和结尾，表明它是一个特殊的属性，用于内部目的。
+
+使用类级别的属性的一个常见原因是在类的各个方法之间共享数据或状态。在这种情况下，将数据存储为类级别的属性可以确保它们在类的所有方法中都是可见和可访问的。
+
+总结一下，使用类级别的属性可以实现在类的不同方法之间共享数据，并且双下划线开头的属性名约定是为了标识特殊的属性。这些属性通常用于实现类的内部逻辑或提供特定的功能。
+好的，下面是一个简单的例子，演示了如何使用类级别的属性和双下划线命名：
+
+```python
+class Counter:
+    __count = 0  # 类级别的属性
+
+    def increment(self):
+        self.__class__.__count += 1
+
+    def get_count(self):
+        return self.__class__.__count
+
+# 创建两个 Counter 实例
+c1 = Counter()
+c2 = Counter()
+
+# 递增计数器
+c1.increment()
+c2.increment()
+c2.increment()
+
+# 获取计数器的值
+print(c1.get_count())  # 输出: 3
+print(c2.get_count())  # 输出: 3
+```
+
+在上述代码中，`Counter`类定义了一个类级别的属性`__count`，用于统计实例被创建的次数。`increment`方法通过访问类级别的属性`__count`来递增计数器的值。`get_count`方法返回计数器的当前值。
+
+在创建了两个`Counter`实例后，对计数器进行递增操作，并通过调用`get_count`方法获取计数器的值。由于`__count`是类级别的属性，所以它在两个实例之间是共享的，对其中一个实例的计数器进行递增操作会影响到另一个实例的计数器值。
+
+这个例子展示了如何使用类级别的属性来实现在类的多个实例之间共享数据。双下划线命名约定用于标识这个属性是特殊的，内部使用的属性，不建议直接访问或修改。
+
+总结：类似于C语言的static关键字。
+
+""" 
     __attrs__ = [
         "headers",
         "cookies",
@@ -450,11 +497,43 @@ class Session(SessionRedirectMixin):
         self.mount("https://", HTTPAdapter())
         self.mount("http://", HTTPAdapter())
 
+
+"""这段代码片段是一个上下文管理器（Context Manager）的实现，用于处理资源的获取和释放。在Python中，上下文管理器通常使用`with`语句来确保资源的正确打开和关闭。
+
+在上述代码中，`__enter__`方法定义了进入上下文时的操作，并返回上下文管理器自身。在这个例子中，`__enter__`方法只是简单地返回了`self`，即上下文管理器本身。
+
+`__exit__`方法定义了离开上下文时的操作。它接受三个参数：`exc_type`、`exc_value`和`traceback`，用于处理可能的异常情况。在这个例子中，`__exit__`方法调用了`self.close()`来关闭资源，确保资源的正确释放。
+
+使用上述代码片段的示例：
+```python
+class MyResource:
     def __enter__(self):
         return self
 
     def __exit__(self, *args):
         self.close()
+
+    def close(self):
+        # 资源关闭操作
+        print("Closing the resource")
+
+# 使用上下文管理器
+with MyResource() as resource:
+    # 在这个代码块中可以使用 resource 对象进行操作
+    print("Doing something with the resource")
+
+# 资源在离开上下文后会自动关闭
+```
+在`with`语句块中，上下文管理器会在进入代码块之前调用`__enter__`方法，然后执行代码块中的操作。无论代码块是否引发异常，都会在离开代码块后调用`__exit__`方法，以确保资源的关闭操作。
+这种使用上下文管理器的方式可以简化资源管理的代码，并确保资源的正确释放，无论代码块中是否发生异常。"""
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.close()
+
+
 
     def prepare_request(self, request):
         """Constructs a :class:`PreparedRequest <PreparedRequest>` for
@@ -518,7 +597,7 @@ class Session(SessionRedirectMixin):
         cert=None,
         json=None,
     ):
-        """Constructs a :class:`Request <Request>`, prepares it and sends it.
+        """Constructs a :class:`Request <Request>`（一个函数可以构建一个类？）, prepares it and sends it.
         Returns :class:`Response <Response>` object.
 
         :param method: method for the new :class:`Request` object.
@@ -808,6 +887,56 @@ class Session(SessionRedirectMixin):
 
         for key in keys_to_move:
             self.adapters[key] = self.adapters.pop(key)
+""" 这段代码是实现了对象的序列化和反序列化操作，用于将对象的状态保存到一个字典中（`__getstate__`方法），以及从字典中恢复对象的状态（`__setstate__`方法）。
+
+在`__getstate__`方法中，通过遍历类的`__attrs__`属性，将对象的属性和对应的值保存到一个字典中。这里使用了字典推导式和`getattr`函数来获取属性的值，并将结果保存在`state`字典中。最后，返回这个字典作为对象的序列化表示。
+
+在`__setstate__`方法中，通过遍历传入的`state`字典，将字典中的键值对恢复到对象的属性中。这里使用了`setattr`函数将属性值设置到对象中。
+
+这种序列化和反序列化的机制可以让我们将对象保存到文件、在网络中传输或者以其他方式持久化对象的状态，然后再恢复为对象。通常情况下，我们可以使用Python的pickle模块来实现对象的序列化和反序列化操作。
+
+这段代码的作用是将`self.__attrs__`列表中的属性保存为对象的状态，然后可以通过`__setstate__`方法将状态恢复为对象的属性。这样的设计使得对象可以更方便地进行序列化和反序列化操作。
+
+好的，下面是一个简单的例子，演示了如何使用`__getstate__`和`__setstate__`方法进行对象的序列化和反序列化：
+
+```python
+class MyClass:
+    __attrs__ = ["name", "age"]
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def __getstate__(self):
+        state = {attr: getattr(self, attr, None) for attr in self.__attrs__}
+        return state
+
+    def __setstate__(self, state):
+        for attr, value in state.items():
+            setattr(self, attr, value)
+
+# 创建一个对象
+obj = MyClass("John", 25)
+
+# 将对象序列化为字典
+serialized_data = obj.__getstate__()
+
+# 反序列化字典为对象
+new_obj = MyClass(None, None)
+new_obj.__setstate__(serialized_data)
+
+# 打印对象的属性
+print(new_obj.name)  # 输出: John
+print(new_obj.age)   # 输出: 25
+```
+
+在上述代码中，`MyClass`类有两个属性`name`和`age`，并且定义了`__getstate__`和`__setstate__`方法。`__getstate__`方法将对象的属性以字典的形式保存到`state`变量中，并返回这个字典作为对象的序列化表示。`__setstate__`方法从传入的`state`字典中恢复对象的属性。
+
+首先，创建一个`MyClass`对象 `obj`，然后通过调用`__getstate__`方法将对象序列化为字典 `serialized_data`。接下来，创建一个新的`MyClass`对象 `new_obj`，并通过调用`__setstate__`方法将字典 `serialized_data` 反序列化为对象的属性。最后，可以通过打印`new_obj`的属性来验证对象的状态是否正确地恢复了。
+
+这个例子展示了如何使用`__getstate__`和`__setstate__`方法来实现对象的序列化和反序列化操作，通过将对象的状态保存为字典，可以方便地传输、存储和恢复对象的状态。
+
+"""
 
     def __getstate__(self):
         state = {attr: getattr(self, attr, None) for attr in self.__attrs__}
