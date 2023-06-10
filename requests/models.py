@@ -766,7 +766,35 @@ class Response:
         except HTTPError:
             return False
         return True
+"""
+在上述示例中，使用 `@property` 装饰器定义了一个名为 `is_redirect` 的属性。这个属性用于判断当前的 `Response` 对象是否是一个有效的 HTTP 重定向。
 
+使用 `@property` 装饰器的原因是为了将这个属性的访问方式更加简洁和一致化。通过将方法转换为属性，我们可以使用属性的方式来获取属性值，而无需显式调用方法。
+
+在这个例子中，`is_redirect` 属性的值是根据 `headers` 中是否存在 "location" 字段，并且 `status_code` 是否在 `REDIRECT_STATI` 列表中来决定的。通过使用 `@property` 装饰器，我们可以直接使用属性的方式来检查这个条件，而无需编写额外的方法。
+
+下面是使用 `is_redirect` 属性的示例：
+
+```python
+response = requests.get("https://www.example.com")
+
+if response.is_redirect:
+    print("Response is a redirect.")
+else:
+    print("Response is not a redirect.")
+```
+
+通过这种方式，我们可以以属性的形式轻松地访问并检查 `Response` 对象是否是一个重定向。这样可以使代码更加简洁、易读和易于维护。
+
+使用 `@property` 装饰器的好处包括：
+
+- 将方法转换为属性，提供了更加一致和简洁的属性访问方式。
+- 可以在属性的 getter 方法中执行自定义的逻辑和计算，以便获取属性的值。
+- 可以在属性的 setter 方法中添加验证和保护逻辑，确保属性值的正确性。
+- 提供了与其他属性一致的接口，使代码更加统一和易于理解。
+
+总之，使用 `@property` 装饰器可以使属性访问更加简洁、直观和可扩展，提供了更好的代码组织和接口设计。
+"""
     @property
     def is_redirect(self):
         """True if this Response is a well-formed HTTP redirect that could have
@@ -902,7 +930,17 @@ class Response:
         # don't need to release the connection; that's been handled by urllib3
         # since we exhausted the data.
         return self._content
+"""
+@property 装饰器通常在以下情况下使用：
 
+封装属性访问：当您希望将类的属性访问封装在方法中时，可以使用 @property 装饰器。它允许您将一个方法定义为属性，并通过属性访问的方式来获取属性的值，而不是直接调用方法。这样可以隐藏底层的实现细节，并提供更加简洁和一致的接口。
+计算属性：有时，您希望在获取属性值时进行计算或转换。使用 @property 装饰器，您可以将一个方法定义为属性的 getter 方法，并在其中执行所需的计算操作。这样，每当获取属性时，都会动态计算并返回相应的值。
+属性验证和保护：使用 @property 装饰器，您可以定义属性的 setter 方法，并在其中进行验证和保护。您可以在 setter 方法中添加逻辑来验证属性的值，并确保其符合特定的要求。这有助于确保属性的正确性和一致性。
+兼容现有代码：在一些情况下，您可能已经有一个使用属性的接口，但现在需要在其中添加额外的逻辑。使用 @property 装饰器，您可以将现有的方法转换为属性，而无需更改原始代码。这样可以保持现有代码的兼容性，并以属性的方式扩展其功能。
+总而言之，@property 装饰器在需要将方法转换为属性的情况下非常有用。它使属性访问更加简洁和一致，并允许您在属性访问过程中执行自定义的操作，如计算、验证和保护。通过使用 @property 装饰器，您可以更好地封装和组织类的属性访问，并提供更加友好和灵活的接口。
+
+
+"""
     @property
     def text(self):
         """Content of the response, in unicode.
