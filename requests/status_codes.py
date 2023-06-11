@@ -109,6 +109,34 @@ codes = LookupDict(name="status_codes")
 def _init():
     for code, titles in _codes.items():
         for title in titles:
+            r"""
+            `setattr()` 是 Python 内置函数之一，用于设置对象的属性值。在给定的代码中，`setattr(codes, title, code)` 
+            用于将变量 `code` 的值设置为 `codes` 对象的属性，并使用变量 `title` 作为属性名。
+
+            具体解释如下：
+
+            - `codes` 是一个对象，可以是自定义的类的实例或其他对象。
+            - `title` 是一个字符串，表示要设置的属性名。
+            - `code` 是一个变量，表示要设置的属性值。
+
+            `setattr(codes, title, code)` 的作用是将 `codes` 对象的属性名为 `title` 的属性的值设置为 `code`。
+
+            这样做的效果是，通过动态地设置属性，可以在运行时为对象添加或修改属性，而不需要在定义类或对象时静态地指定属性。
+            这种动态设置属性的方式可以在某些情况下提供更灵活和可扩展的代码设计。
+            class Person:
+                pass
+
+            person = Person()
+
+            # 使用 setattr() 设置对象的属性
+            setattr(person, "name", "John")
+            setattr(person, "age", 30)
+
+            # 访问对象的属性
+            print(person.name)  # 输出: John
+            print(person.age)   # 输出: 30
+
+            """
             setattr(codes, title, code)
             if not title.startswith(("\\", "/")):
                 setattr(codes, title.upper(), code)
